@@ -1,0 +1,20 @@
+Mobile app for appointment initiators
+see people in waiting rooms
+Bump people up from queues
+Dismiss other people,
+VIP cards management section
+- filter by card type
+- revoke access to a card
+- different card styles for:
+ - vip 1 - yellow
+ - vip 2 - Green
+ - vip 3 - Red
+ space from phone field
+ dashboard - one waiting room
+ cards management - reset card => revoke access
+ remove location field in add appointment
+------------------------
+
+send messages
+- visitor type only applies to users logged in as senior users
+- categorise users into normal and senior
