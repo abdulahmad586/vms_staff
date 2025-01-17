@@ -14,7 +14,7 @@ class _WaitingRoomListScreenState extends State<WaitingRoomListScreen> {
     return Scaffold(
         appBar: AppBar(
           leading: IconButton(
-              icon: const Icon(Icons.arrow_back),
+              icon: const Icon(Icons.menu),
               onPressed: () {
                 widget.onMenuPressed!();
               }),
@@ -43,7 +43,7 @@ class _WaitingRoomListScreenState extends State<WaitingRoomListScreen> {
                     backgroundColor: AppColors.primaryColor.withOpacity(0.5),
                     label: "Waiting Rooms",
                     display: "2",
-                    width: (MediaQuery.of(context).size.width / 2) - 20,
+                    width: 200,
                   ),
                   DashboardStatWidget(
                     icon: Icons.logout,
@@ -55,7 +55,7 @@ class _WaitingRoomListScreenState extends State<WaitingRoomListScreen> {
                     label: "Appointments",
                     display: "234",
                     backgroundColor: AppColors.secondaryColor.withOpacity(0.5),
-                    width: (MediaQuery.of(context).size.width / 2) - 20,
+                    width: 200,
                   ),
                   // StatWidget(icon: Icons.location_history, showShadow: false, iconBackgroundColor:Colors.yellow, onClick: (){
                   //   NavUtils.navTo(context, const AppointmentCheckpointScreen());
@@ -65,7 +65,7 @@ class _WaitingRoomListScreenState extends State<WaitingRoomListScreen> {
               const SizedBox(
                 height: 30,
               ),
-              Text("Waiting rooms"),
+              const Text("Waiting rooms"),
               const SizedBox(
                 height: 10,
               ),

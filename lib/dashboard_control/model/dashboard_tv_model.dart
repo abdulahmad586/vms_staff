@@ -7,6 +7,7 @@ enum DashboardTvState {
 class DashboardTvModel {
   final String id;
   final String name;
+  final String? group;
   final String? username;
   final String? password;
   final String location;
@@ -17,6 +18,7 @@ class DashboardTvModel {
     required this.id,
     required this.name,
     required this.username,
+    this.group,
     required this.password,
     required this.location,
     this.tvSocketId,
@@ -29,6 +31,7 @@ class DashboardTvModel {
       'name': name,
       'username': username,
       'password': password,
+      'group': group,
       'location': location,
       'tvSocketId': tvSocketId,
       'status': status.name,
@@ -42,6 +45,7 @@ class DashboardTvModel {
       username: json['username'],
       password: json['password'],
       location: json['location'],
+      group: json['group'],
       tvSocketId: json['tvSocketId'],
       status: DashboardTvState.values.byName(json['status'] ?? "offline"),
     );

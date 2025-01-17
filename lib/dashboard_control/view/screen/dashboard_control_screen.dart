@@ -53,9 +53,9 @@ class _DashboardControlScreenState extends State<DashboardControlScreen> {
               case DashboardTvState.offline:
                 return DashboardOfflineWidget();
               case DashboardTvState.online:
-                return DashboardOnlineWidget(state.tv!);
+                return DashboardOnlineWidget(liveDashboard);
               case DashboardTvState.loggedIn:
-                return DashboardLoggedInWidget(state.tv!);
+                return DashboardLoggedInWidget(liveDashboard);
               default:
                 return DashboardOfflineWidget();
             }

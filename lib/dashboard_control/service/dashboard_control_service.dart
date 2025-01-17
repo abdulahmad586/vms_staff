@@ -29,6 +29,15 @@ class DashboardControlService {
     }
   }
 
+  Future<bool> markAppointmentDone() async {
+    try {
+      return true;
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+  }
+
   Future<DashboardTvModel> createDashboard(
       {String? name,
       String? username,

@@ -40,9 +40,7 @@ class DashboardOnlineWidget extends StatelessWidget {
           AppTextButton(
               label: "LOGIN",
               onPressed: () {
-                context
-                    .read<DashboardControlCubit>()
-                    .loginMyDashboard(tv, tv.username ?? "", tv.password ?? "");
+                context.read<DashboardControlCubit>().loginMyDashboard(tv);
               }),
         ],
       ),

@@ -6,7 +6,10 @@ import '../../../shared/shared.dart';
 
 class DashboardLoggedInWidget extends StatefulWidget {
   final DashboardTvModel tv;
-  const DashboardLoggedInWidget(this.tv, {super.key});
+  const DashboardLoggedInWidget(
+    this.tv, {
+    super.key,
+  });
 
   @override
   State<DashboardLoggedInWidget> createState() =>
@@ -16,9 +19,13 @@ class DashboardLoggedInWidget extends StatefulWidget {
 class _DashboardLoggedInWidgetState extends State<DashboardLoggedInWidget> {
   @override
   Widget build(BuildContext context) {
+    final state = context.read<DashboardControlCubit>().state;
     return BlocProvider<DashboardQueueCubit>(
-        create: (_) =>
-            DashboardQueueCubit(context, DashboardQueueState(), tv: widget.tv),
+        create: (_) => DashboardQueueCubit(context, DashboardQueueState(),
+            tv: widget.tv,
+            initialQueue: widget.tv.id == state.activeDashboard
+                ? state.activeDashboardInitQueue ?? []
+                : []),
         child: BlocBuilder<DashboardQueueCubit, DashboardQueueState>(
           builder: (BuildContext context, state) {
             return PopScope(
@@ -45,9 +52,8 @@ class _DashboardLoggedInWidgetState extends State<DashboardLoggedInWidget> {
                         itemCount: state.queue!.length,
                         itemBuilder: (_, index) => VisitorQueueListItem(
                           state.queue![index],
-                          isActive: index == 0 ||
-                              state.currentVisitorBookingNumber ==
-                                  state.queue![index].bookingNo,
+                          isActive: state.currentVisitorBookingNumber ==
+                              state.queue![index].id,
                           onPressed: () {
                             // NavUtils.
                           },

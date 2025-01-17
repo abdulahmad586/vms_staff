@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:shevarms_user/shared/shared.dart';
 import 'package:shevarms_user/waiting_rooms/model/waiting_room_model.dart';
+
 class WaitingRoomsListItem extends StatelessWidget {
-  const WaitingRoomsListItem(this.roomModel, {Key? key, this.onTap, this.trailing}) : super(key: key);
+  const WaitingRoomsListItem(this.roomModel,
+      {Key? key, this.onTap, this.trailing})
+      : super(key: key);
   final WaitingRoomModel roomModel;
   final Widget? trailing;
   final Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
-
     return Card(
       elevation: 0.4,
       child: InkWell(
@@ -22,8 +24,8 @@ class WaitingRoomsListItem extends StatelessWidget {
               width: 40,
               height: 40,
             ),
-            trailing: trailing
-        ),
-      ),);
+            trailing: trailing),
+      ),
+    );
   }
 }

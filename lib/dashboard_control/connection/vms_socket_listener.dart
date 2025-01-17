@@ -11,15 +11,20 @@ class VMSSocketListener {
   static const String EVENT_FETCH_APPOINTMENT_QUEUE = "fetchAppointmentQueue";
   static const String EVENT_REPLY_FETCH_APPOINTMENT_QUEUE =
       "replyFetchAppointmentQueue";
+  static const String EVENT_ADD_NEW_APPOINTMENT = "add:new:appointment";
+  static const String EVENT_REMOVE_APPOINTMENT =
+      "remove:appointment"; //_id, group
+  static const String EVENT_MARK_APPOINTMENT_DONE = "markAsDone"; //_id
   static const String EVENT_DASHBOARD_STATUS_OFFLINE =
       "DASHBOARD:STATUS:OFFLINE";
   static const String EVENT_DASHBOARD_STATUS_LOGGEDIN =
       "DASHBOARD:STATUS:LOGGEDIN";
 
-  static const String EVENT_REPLY_CALL_IN = "replyCallIn";
-  static const String EVENT_CALL_IN = "callIn";
+  static const String EVENT_REPLY_CALL_IN = "replyCallin";
+  static const String EVENT_CALL_IN = "callin";
   static const String EVENT_MARK_AS_DONE = "markAsDone";
   static const String EVENT_TV_LOGIN = "login";
+  static const String EVENT_TV_SHUTDOWN = "shutdown";
   static const String EVENT_TV_LOGOUT = "logout";
   static const String EVENT_CALL_IN_APPOINTMENT = "callIn";
   static const String EVENT_REPLY_TV_LOGIN = "replyLogin";
@@ -29,10 +34,12 @@ class VMSSocketListener {
   static const String EVENT_SLIDES_TIMER_UPDATE = "SLIDES:TIMER:UPDATE";
 
   VMSSocketClient connection;
-  Function(DashboardTvModel)? onDashboardLoggedIn;
+  Function(dynamic)? onDashboardLoggedIn;
   Function(List<DashboardTvModel>)? onReplyGetOnlineTvs;
   Function(DashboardTvModel)? onDashboardOffline;
   Function(DashboardTvModel)? onDashboardOnline;
+  Function(QueueItemModel)? onNewAppointment;
+  Function(String)? onRemoveAppointment;
   Function(String)? onCalledIn;
   Function(String dashboardId, List<QueueItemModel> queue)?
       onDashboardQueueUpdate;
@@ -45,10 +52,13 @@ class VMSSocketListener {
     this.onReplyGetOnlineTvs,
     this.onDashboardQueueUpdate,
     this.onCalledIn,
+    this.onNewAppointment,
+    this.onRemoveAppointment,
   }) {
     init();
   }
 
+  String? activeDashLogin;
   void init() {
     if (onReplyGetOnlineTvs != null) {
       connection.listen(EVENT_REPLY_GET_ONLINE_TVS, (dashboardPayloads) {
@@ -59,13 +69,25 @@ class VMSSocketListener {
     }
     if (onDashboardLoggedIn != null) {
       connection.listen(EVENT_REPLY_TV_LOGIN, (dashboardPayload) {
-        print("Received LOGGED IN STATUS through socket $dashboardPayload");
-        if (dashboardPayload['dashId'] != null &&
-            dashboardPayload['queue'] != null) {
+        if (dashboardPayload is String) {
+          dashboardPayload = jsonDecode(dashboardPayload);
+        }
+        // print("Received LOGGED IN STATUS through socket $dashboardPayload");
+        // log(jsonEncode(dashboardPayload));
+        if (activeDashLogin != null) {
+          final dashboardId = activeDashLogin;
+
+          activeDashLogin = null;
+
           List<QueueItemModel> queue =
-              QueueItemModel.fromMapArray(dashboardPayload['queue']);
+              dashboardPayload['queue'].map<QueueItemModel>((item) {
+            return QueueItemModel.fromDetailedMap(item);
+          }).toList();
+          if (onDashboardLoggedIn != null) {
+            onDashboardLoggedIn?.call(queue);
+          }
           if (onDashboardQueueUpdate != null) {
-            onDashboardQueueUpdate?.call(dashboardPayload['dashId'], queue);
+            onDashboardQueueUpdate?.call(dashboardId!, queue);
           }
         }
         // if (dashboardPayload[0] != null) {
@@ -103,10 +125,38 @@ class VMSSocketListener {
             "RECEIVED UPDATE ON QUEUE: ${queueResponse.runtimeType} ${queueResponse} ");
         if (queueResponse['dashId'] != null && queueResponse['queue'] != null) {
           List<QueueItemModel> queue =
-              QueueItemModel.fromMapArray(queueResponse['queue']);
+              QueueItemModel.fromDetailedMapArray(queueResponse['queue']);
           if (onDashboardQueueUpdate != null) {
             onDashboardQueueUpdate?.call(queueResponse['dashId'], queue);
           }
+        }
+      });
+    }
+    if (onNewAppointment != null) {
+      connection.listen(EVENT_ADD_NEW_APPOINTMENT, (newAppointmentResponse) {
+        if (newAppointmentResponse is String) {
+          newAppointmentResponse = jsonDecode(newAppointmentResponse);
+        }
+        print(
+            "RECEIVED NEW APPOINTMENT: ${newAppointmentResponse.runtimeType} ${newAppointmentResponse} ");
+        final item = QueueItemModel.fromDetailedMap(
+            newAppointmentResponse['appointment']);
+        if (onNewAppointment != null) {
+          onNewAppointment?.call(item);
+        }
+      });
+    }
+
+    if (onRemoveAppointment != null) {
+      connection.listen(EVENT_REMOVE_APPOINTMENT, (response) {
+        if (response is String) {
+          response = jsonDecode(response);
+        }
+        final apId = response['_id'];
+        print("RECEIVED REMOVE FOR APPOINTMENT $apId");
+
+        if (onRemoveAppointment != null) {
+          onRemoveAppointment?.call(apId);
         }
       });
     }
@@ -116,18 +166,14 @@ class VMSSocketListener {
           callInResponse = jsonDecode(callInResponse);
         }
         print("RECEIVED CALL IN FOR USER: $callInResponse");
-        if (callInResponse['ok'] == true) {
-          String bookingNumber = callInResponse['bookingNo'];
-          if (onCalledIn != null) {
-            onCalledIn?.call(bookingNumber);
-          }
-        }
+        onCalledIn?.call(callInResponse['_id']);
       });
     }
   }
 
-  void listenForTvQueue(String dashboardId) {
-    connection.emit(EVENT_FETCH_APPOINTMENT_QUEUE, {'dashId': dashboardId});
+  void listenForTvQueue(String dashboardId, String group) {
+    connection.emit(
+        EVENT_FETCH_APPOINTMENT_QUEUE, {'dashId': dashboardId, "group": group});
   }
 
   void unlistenForTvQueue() {
@@ -138,13 +184,12 @@ class VMSSocketListener {
     connection.emit(EVENT_GET_ONLINE_TVS, {});
   }
 
-  void loginDashboard(
-      String id, String username, String password, String tvSocketId) {
+  void loginDashboard(String id, String group) {
+    activeDashLogin = id;
     connection.emit(EVENT_TV_LOGIN, {
       'dashId': id,
-      'username': username,
-      'password': password,
-      'tvSocketId': tvSocketId
+      'group': group,
+      // 'tvSocketId': tvSocketId
     });
   }
 
@@ -154,18 +199,18 @@ class VMSSocketListener {
     });
   }
 
-  void callInAppointment(String dashboardId, String bookingNumber) {
-    connection.emit(EVENT_TV_LOGIN, {
+  void callInAppointment(String dashboardId, String group, String apId) {
+    connection.emit(EVENT_CALL_IN, {
       'dashId': dashboardId,
-      'bookingNo': bookingNumber,
+      'group': group,
+      '_id': apId,
     });
   }
 
-  void markAppointmentAsDone(String dashboardId, String bookingNumber) {
-    connection.emit(EVENT_TV_LOGIN, {
-      'dashId': dashboardId,
-      'bookingNo': bookingNumber,
-    });
+  void markAppointmentAsDone(
+      String dashboardId, String group, String appointmentId) {
+    connection.emit(
+        EVENT_MARK_APPOINTMENT_DONE, {'_id': appointmentId, 'group': group});
   }
 
   void dispose() {
@@ -176,5 +221,12 @@ class VMSSocketListener {
     connection.unlisten(EVENT_REPLY_FETCH_APPOINTMENT_QUEUE);
     connection.unlisten(EVENT_REPLY_CALL_IN);
     connection.closeConnection();
+  }
+
+  void shutdownDashboard(String id, String? group) {
+    connection.emit(EVENT_TV_SHUTDOWN, {
+      'dashId': id,
+      'group': group,
+    });
   }
 }

@@ -4,8 +4,13 @@ class DashboardMessage extends StatelessWidget {
   final String title;
   final String message;
   final Widget? action;
+  final IconData? icon;
   const DashboardMessage(
-      {required this.title, required this.message, this.action, super.key});
+      {required this.title,
+      required this.message,
+      this.action,
+      this.icon,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,8 +21,8 @@ class DashboardMessage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.info,
+            Icon(
+              icon ?? Icons.info,
               size: 90,
               color: Colors.blue,
             ),

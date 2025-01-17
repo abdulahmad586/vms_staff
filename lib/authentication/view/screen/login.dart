@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shevarms_user/authentication/authentication.dart';
 import 'package:shevarms_user/authentication/view/screen/server_settings_screen.dart';
+import 'package:shevarms_user/dashboard_control/dashboard_control.dart';
 import 'package:shevarms_user/home/view/screen/home_page.dart';
 import 'package:shevarms_user/shared/shared.dart';
 
@@ -17,8 +18,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController email = TextEditingController.fromValue(
-      const TextEditingValue(text: ""));
+  TextEditingController email =
+      TextEditingController.fromValue(const TextEditingValue(text: ""));
   TextEditingController password =
       TextEditingController.fromValue(const TextEditingValue(text: ""));
 
@@ -121,6 +122,9 @@ class _LoginPageState extends State<LoginPage> {
                           context
                               .read<LoginCubit>()
                               .signIn(email.text, password.text, (User user) {
+                            BlocProvider.of<DashboardControlCubit>(context)
+                                .updateUserDashboards(
+                                    user.dashboards ?? <String>[]);
                             BlocProvider.of<AppCubit>(context)
                                 .updateUserData(user);
                             BlocProvider.of<AppCubit>(context)

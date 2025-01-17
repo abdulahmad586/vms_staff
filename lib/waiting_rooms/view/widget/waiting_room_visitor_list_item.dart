@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shevarms_user/shared/shared.dart';
 import 'package:shevarms_user/visitor_enrolment/model/model.dart';
 
@@ -79,10 +80,10 @@ class WaitingRoomVisitorListItem extends StatelessWidget {
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.only(
                           topRight: Radius.circular(15)),
-                      color: visitor.getColor(),
+                      color: getColor(visitor.userType),
                     ),
                     child: Text(
-                      "${visitor.userType == VisitorType.visitor ? "VISITOR" : "VIP"} ${visitor.getVisitorLabel()}",
+                      "${visitor.userType == VisitorType.visitor ? "VISITOR" : "VIP"} ${getVisitorLabel(visitor.userType)}",
                       style: Theme.of(context).textTheme.labelMedium,
                       textAlign: TextAlign.center,
                     )),
@@ -92,14 +93,20 @@ class WaitingRoomVisitorListItem extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text("${Random().nextInt(6)}:00pm"),
-                    MorePopup(
-                      onAction: (a) {},
-                      options: const [
-                        "Call in",
-                        "Mark as done",
-                        "Reschedule AP"
-                      ],
-                    ),
+                    BlocBuilder<AppCubit, AppState>(builder: (context, state) {
+                      if (state.user?.userType == UserType.seniorStaff) {
+                        return MorePopup(
+                          onAction: (a) {},
+                          options: const [
+                            "Call in",
+                            "Reschedule AP",
+                            "Cancel AP",
+                          ],
+                        );
+                      } else {
+                        return const SizedBox();
+                      }
+                    }),
                   ],
                 ))),
               ],
@@ -108,5 +115,33 @@ class WaitingRoomVisitorListItem extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Color getColor(VisitorType userType) {
+    switch (userType) {
+      case VisitorType.visitor:
+        return Colors.grey;
+      case VisitorType.vip:
+        return Colors.yellow;
+      case VisitorType.vvip:
+        return Colors.green;
+      case VisitorType.vvvip:
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  String getVisitorLabel(VisitorType userType) {
+    switch (userType) {
+      case VisitorType.visitor:
+        return "";
+      case VisitorType.vip:
+        return "I";
+      case VisitorType.vvip:
+        return "II";
+      case VisitorType.vvvip:
+        return "III";
+    }
   }
 }

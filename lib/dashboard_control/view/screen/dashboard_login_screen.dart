@@ -95,24 +95,7 @@ class DashboardTvLoginScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(
-                    height: 10,
-                  ),
-                  AppTextField(
-                    validator: (text) => text == null || text.isEmpty
-                        ? "Field is required"
-                        : null,
-                    labelText: "Username",
-                    controller: username,
-                    keyboardType: TextInputType.name,
-                  ),
-                  const SizedBox(height: 20),
-                  AppTextField(
-                    validator: (text) => text == null || text.isEmpty
-                        ? "Field is required"
-                        : null,
-                    labelText: "Password",
-                    controller: password,
-                    hidePassword: true,
+                    height: 50,
                   ),
                   const SizedBox(height: 20),
                   AppTextButton(
@@ -127,7 +110,7 @@ class DashboardTvLoginScreen extends StatelessWidget {
 
                         context
                             .read<DashboardControlCubit>()
-                            .loginMyDashboard(tv, username.text, password.text);
+                            .loginMyDashboard(tv);
                       }),
                 ],
               ),

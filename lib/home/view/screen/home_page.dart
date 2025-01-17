@@ -5,18 +5,16 @@ import 'package:kf_drawer/kf_drawer.dart';
 import 'package:shevarms_user/account_info/view/screen/settings_screen.dart';
 import 'package:shevarms_user/appointments/appointments.dart';
 import 'package:shevarms_user/authentication/authentication.dart';
+import 'package:shevarms_user/card_registration/card_registration.dart';
 import 'package:shevarms_user/dashboard/dashboard.dart';
 import 'package:shevarms_user/dashboard_control/dashboard_control.dart';
 import 'package:shevarms_user/notifications/notifications.dart';
 import 'package:shevarms_user/reminder/reminder.dart';
 import 'package:shevarms_user/shared/shared.dart';
+import 'package:shevarms_user/sip_communication/sip_communication.dart';
 import 'package:shevarms_user/tags_assignment/tags_assignment.dart';
 import 'package:shevarms_user/video_conference/video_conference.dart';
-import 'package:shevarms_user/waiting_rooms/waiting_rooms.dart';
 import 'package:shimmer/shimmer.dart';
-
-import '../../../card_registration/card_registration.dart';
-import '../../../sip_communication/sip_communication.dart';
 
 class HomePage extends StatefulWidget {
   static const String routeName = "home";
@@ -39,7 +37,9 @@ class _HomePageState extends State<HomePage> {
           UserType.he,
           UserType.staff,
           UserType.admin,
-          UserType.superUser
+          UserType.superUser,
+          UserType.paGovernor,
+          UserType.chiefDetail,
         ]),
     NavItem(
         icon: Icons.calendar_month,
@@ -51,7 +51,9 @@ class _HomePageState extends State<HomePage> {
           UserType.seniorStaff,
           UserType.staff,
           UserType.admin,
-          UserType.superUser
+          UserType.superUser,
+          UserType.paGovernor,
+          UserType.chiefDetail,
         ]),
     NavItem(
         icon: Icons.alarm,
@@ -63,7 +65,9 @@ class _HomePageState extends State<HomePage> {
           UserType.seniorStaff,
           UserType.staff,
           UserType.admin,
-          UserType.superUser
+          UserType.superUser,
+          UserType.paGovernor,
+          UserType.chiefDetail,
         ]),
     NavItem(
         icon: Icons.credit_card,
@@ -79,22 +83,28 @@ class _HomePageState extends State<HomePage> {
         allowedUsers: [
           UserType.admin,
         ]),
-    NavItem(
-        icon: Icons.meeting_room_outlined,
-        name: 'Waiting Rooms',
-        title: 'Waiting Rooms',
-        body: WaitingRoomListScreen(),
-        allowedUsers: [
-          UserType.seniorStaff,
-          UserType.admin,
-          UserType.superUser
-        ]),
+    // NavItem(
+    //     icon: Icons.meeting_room_outlined,
+    //     name: 'Waiting Rooms',
+    //     title: 'Waiting Rooms',
+    //     body: WaitingRoomListScreen(),
+    //     allowedUsers: [
+    //       UserType.seniorStaff,
+    //       UserType.admin,
+    //       UserType.superUser,
+    //     ]),
     NavItem(
         icon: Icons.control_camera_sharp,
         name: 'Dashboard Control',
         title: 'Dashboard Control',
         body: DashboardTVsListScreen() /*DashboardControlScreen()*/,
-        allowedUsers: [UserType.seniorStaff, UserType.he]),
+        allowedUsers: [
+          UserType.seniorStaff,
+          UserType.he,
+          UserType.admin,
+          UserType.paGovernor,
+          UserType.chiefDetail,
+        ]),
     NavItem(
         icon: Icons.notifications,
         name: 'Notifications',
@@ -105,23 +115,27 @@ class _HomePageState extends State<HomePage> {
           UserType.seniorStaff,
           UserType.staff,
           UserType.admin,
-          UserType.superUser
+          UserType.superUser,
+          UserType.paGovernor,
+          UserType.chiefDetail,
         ]),
     NavItem(
         icon: Icons.video_camera_back,
-        name: 'Video Conference',
-        title: 'Video Conference',
+        name: 'Meetings',
+        title: 'Meetings',
         body: VideoConferenceScreen(),
         allowedUsers: [UserType.staff, UserType.seniorStaff, UserType.he]),
     NavItem(
         icon: Icons.call,
-        name: 'Communication',
-        title: 'Communication',
+        name: 'Phone Sys',
+        title: 'Phone Sys',
         body: DialPadWidget(),
         allowedUsers: [
           UserType.staff,
           UserType.seniorStaff,
           UserType.he,
+          UserType.paGovernor,
+          UserType.chiefDetail,
         ]),
   ];
 

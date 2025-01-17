@@ -52,4 +52,19 @@ class AppointmentModel {
     return List.generate(items.length,
         (index) => parse(Map<String, dynamic>.from(items[index])));
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'staff': staff,
+      'eventName': label,
+      'description': description,
+      'calendar': calendar,
+      'time': time,
+      'date': date.toIso8601String(),
+      'visitLocation': visitLocation,
+      'accessGate': accessGate,
+      'guest': guest?.toMap(),
+    };
+  }
 }

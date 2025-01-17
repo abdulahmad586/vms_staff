@@ -18,3 +18,4 @@ VIP cards management section
 send messages
 - visitor type only applies to users logged in as senior users
 - categorise users into normal and senior
+

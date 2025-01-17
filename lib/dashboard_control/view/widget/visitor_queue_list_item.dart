@@ -46,6 +46,9 @@ class VisitorQueueListItem extends StatelessWidget {
                         .labelLarge
                         ?.copyWith(color: isActive ? Colors.white : null),
                   ),
+                  const SizedBox(
+                    height: 5,
+                  ),
                   if (visitor.designation != null &&
                       visitor.designation!.isNotEmpty)
                     Text(
@@ -57,6 +60,9 @@ class VisitorQueueListItem extends StatelessWidget {
                           .labelMedium
                           ?.copyWith(color: isActive ? Colors.grey[300] : null),
                     ),
+                  const SizedBox(
+                    height: 5,
+                  ),
                   Text(
                     "${visitor.designation ?? "No Designation"} | ${visitor.placeOfWork ?? ""}",
                     maxLines: 1,
@@ -129,6 +135,7 @@ class VisitorQueueListItem extends StatelessWidget {
                       },
                       options: [
                         isActive ? "Mark as done" : "Call in",
+                        "Cancel AP",
                         "Reschedule AP"
                       ],
                     ),

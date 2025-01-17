@@ -10,12 +10,15 @@ enum VisitorType {
 }
 
 class QueueItemModel {
+  final String? id;
   final String firstName;
   final String lastName;
   final String phone;
   final String email;
   final String? placeOfWork;
+  final String? eventName;
   final String? designation;
+  final String? description;
   String picture;
   final String time;
   final String visitLocation;
@@ -24,12 +27,15 @@ class QueueItemModel {
   final VisitorType visitorType;
 
   QueueItemModel({
+    required this.id,
     required this.firstName,
     required this.lastName,
     required this.phone,
     required this.email,
     required this.placeOfWork,
+    this.eventName,
     required this.designation,
+    this.description,
     required this.picture,
     required this.time,
     required this.visitLocation,
@@ -45,12 +51,15 @@ class QueueItemModel {
   // Convert a Map to a QueueItemModel instance
   factory QueueItemModel.fromMap(Map<String, dynamic> map) {
     return QueueItemModel(
+      id: map['id'] ?? map["_id"],
       firstName: map['firstName'] as String,
       lastName: map['lastName'] as String,
       phone: map['phone'] as String,
       email: map['email'] as String,
       placeOfWork: map['placeOfWork'] as String,
       designation: map['designation'] as String,
+      description: map['description'] as String?,
+      eventName: map['eventName'] as String?,
       picture: map['picture'] as String,
       time: map['time'] as String,
       visitLocation: map['visitLocation'] as String,
@@ -75,9 +84,11 @@ class QueueItemModel {
       'email': email,
       'placeOfWork': placeOfWork,
       'designation': designation,
+      'description': description,
       'picture': picture,
       'time': time,
       'visitLocation': visitLocation,
+      'eventName': eventName,
       'accessGate': accessGate,
       'bookingNo': bookingNo,
       'visitorType': visitorType.name,
@@ -86,12 +97,15 @@ class QueueItemModel {
 
   // Create a copy of the current instance with optional new values
   QueueItemModel copyWith({
+    String? id,
     String? firstName,
     String? lastName,
     String? phone,
     String? email,
     String? placeOfWork,
     String? designation,
+    String? description,
+    String? eventName,
     String? picture,
     String? time,
     String? visitLocation,
@@ -99,12 +113,15 @@ class QueueItemModel {
     String? bookingNo,
   }) {
     return QueueItemModel(
+      id: id ?? this.id,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       phone: phone ?? this.phone,
       email: email ?? this.email,
       placeOfWork: placeOfWork ?? this.placeOfWork,
       designation: designation ?? this.designation,
+      description: description ?? this.description,
+      eventName: eventName ?? this.eventName,
       picture: picture ?? this.picture,
       time: time ?? this.time,
       visitLocation: visitLocation ?? this.visitLocation,
@@ -139,5 +156,27 @@ class QueueItemModel {
       case VisitorType.vip3:
         return "III";
     }
+  }
+
+  static QueueItemModel fromDetailedMap(Map<String, dynamic> item) {
+    return QueueItemModel(
+        id: item['id'] ?? item['_id'],
+        firstName: item['guest']["firstName"],
+        lastName: item['guest']["lastName"],
+        phone: item['guest']["phone"],
+        email: item['guest']["email"],
+        placeOfWork: item['guest']["placeOfWork"],
+        designation: item['guest']["designation"],
+        description: item['description'],
+        eventName: item['eventName'],
+        picture: item['guest']["picture"],
+        time: item['time'],
+        visitLocation: item['visitLocation'],
+        accessGate: item['accessGate'],
+        bookingNo: item['bookingNo']);
+  }
+
+  static List<QueueItemModel> fromDetailedMapArray(List payloads) {
+    return payloads.map((e) => QueueItemModel.fromDetailedMap(e)).toList();
   }
 }

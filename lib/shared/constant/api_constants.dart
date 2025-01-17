@@ -48,4 +48,5 @@ class ApiConstants {
       "/api/v1/card/by-qrcode?qrCode=$value";
   static String getACardBySerialNo(String value) =>
       "/api/v1/card/by-sno?sno=$value";
+  static const String getLocations = "/api/v1/location/";
 }

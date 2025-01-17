@@ -10,7 +10,9 @@ enum UserType {
   he,
   profiler,
   security,
-  staff
+  staff,
+  paGovernor,
+  chiefDetail,
 }
 
 UserType getUserType(String? str) {
@@ -28,6 +30,8 @@ class User {
     UserType.profiler: "Profiler",
     UserType.security: "Security",
     UserType.staff: "Staff",
+    UserType.paGovernor: "PA Governor",
+    UserType.chiefDetail: "Chief Detail",
   };
 
   String? get fullName => "$firstName $lastName";
@@ -48,6 +52,10 @@ class User {
         return UserType.security;
       case "Staff":
         return UserType.staff;
+      case "PA Governor":
+        return UserType.paGovernor;
+      case "Chief Detail":
+        return UserType.chiefDetail;
       default:
         return UserType.staff;
     }
@@ -68,6 +76,7 @@ class User {
   String picture;
   final DateTime? updatedAt;
   final DateTime? createdAt;
+  final List<String>? dashboards;
 
   User({
     required this.id,
@@ -83,6 +92,7 @@ class User {
     this.picture = defaultProfileImage,
     this.createdAt,
     this.updatedAt,
+    this.dashboards,
   }) {
     if (!picture.startsWith("http")) {
       picture = (AppSettings().baseUrl ?? ApiConstants.baseUrl) + picture;
@@ -102,6 +112,9 @@ class User {
       accessGate: map["accessGate"] ?? "",
       userType: getUserType(map['userType']),
       picture: map["picture"] ?? defaultProfileImage,
+      dashboards: map['dashboards'] is List && map['dashboards'].isNotEmpty
+          ? List<String>.from(map['dashboards'])
+          : <String>[],
       createdAt:
           map["createdAt"] == null ? null : DateTime.parse(map['createdAt']),
       updatedAt:
@@ -113,19 +126,21 @@ class User {
     return list.map((e) => User.fromMap(e)).toList();
   }
 
-  User copyWith(
-      {String? firstName,
-      String? lastName,
-      String? phone,
-      String? placeOfWork,
-      String? designation,
-      String? email,
-      String? location,
-      String? accessGate,
-      UserType? userType,
-      String? picture,
-      DateTime? createdAt,
-      DateTime? updatedAt}) {
+  User copyWith({
+    String? firstName,
+    String? lastName,
+    String? phone,
+    String? placeOfWork,
+    String? designation,
+    String? email,
+    String? location,
+    String? accessGate,
+    UserType? userType,
+    String? picture,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    List<String>? dashboards,
+  }) {
     return User(
       id: id,
       firstName: firstName ?? this.firstName,
@@ -140,6 +155,7 @@ class User {
       picture: picture ?? this.picture,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      dashboards: dashboards ?? this.dashboards,
     );
   }
 
@@ -158,6 +174,7 @@ class User {
       "picture": picture,
       "createdAt": createdAt?.toIso8601String(),
       "updatedAt": updatedAt?.toIso8601String(),
+      "dashboards": dashboards,
     };
   }
 }

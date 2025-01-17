@@ -4,6 +4,7 @@ import 'package:kf_drawer/kf_drawer.dart';
 import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 import 'package:shevarms_user/dashboard_control/dashboard_control.dart';
 import 'package:shevarms_user/dashboard_control/view/screen/dashboard_login_screen.dart';
+import 'package:shevarms_user/dashboard_control/view/screen/dashboard_shutdown_screen.dart';
 import 'package:shevarms_user/shared/shared.dart';
 
 class DashboardTVsListScreen extends KFDrawerContent {
@@ -15,6 +16,8 @@ class _DashboardTVsListScreenState extends State<DashboardTVsListScreen> {
   @override
   Widget build(BuildContext context) {
     final refreshController = RefreshController();
+    BlocProvider.of<DashboardControlCubit>(context).updateUserDashboards(
+        context.read<AppCubit>().state.user?.dashboards ?? <String>[]);
     return BlocBuilder<DashboardControlCubit, DashboardControlState>(
         builder: (context, state) {
       return Scaffold(
@@ -92,7 +95,8 @@ class _DashboardTVsListScreenState extends State<DashboardTVsListScreen> {
                         onRefresh: () {
                           BlocProvider.of<DashboardControlCubit>(context)
                               .refreshDashboards();
-                          refreshController.loadComplete();
+                          Future.delayed(const Duration(seconds: 1),
+                              refreshController.refreshCompleted);
                         },
                         child: state.onlineTVs == null ||
                                 state.onlineTVs!.isEmpty
@@ -121,6 +125,13 @@ class _DashboardTVsListScreenState extends State<DashboardTVsListScreen> {
                                       onAction: (a) {
                                         switch (a) {
                                           case 0:
+                                            NavUtils.navTo(
+                                                context,
+                                                DashboardTvLoginScreen(
+                                                  state.onlineTVs![index],
+                                                ));
+                                            break;
+                                          case 1:
                                             if (state
                                                     .onlineTVs![index].status ==
                                                 DashboardTvState.loggedIn) {
@@ -135,21 +146,28 @@ class _DashboardTVsListScreenState extends State<DashboardTVsListScreen> {
                                                       "Please login first");
                                             }
                                             break;
-                                          case 1:
-                                            NavUtils.navTo(
-                                                context,
-                                                DashboardTvLoginScreen(
-                                                  state.onlineTVs![index],
-                                                ));
+                                          case 2:
+                                            if (state
+                                                    .onlineTVs![index].status ==
+                                                DashboardTvState.loggedIn) {
+                                              NavUtils.navTo(
+                                                  context,
+                                                  DashboardShutdownScreen(
+                                                      state.onlineTVs![index]));
+                                            } else {
+                                              Alert.toast(context,
+                                                  message:
+                                                      "Please login first");
+                                            }
                                             break;
                                         }
                                       },
                                       options: [
-                                        "View queue",
                                         state.onlineTVs![index].status ==
                                                 DashboardTvState.loggedIn
                                             ? "Logout"
                                             : "Login",
+                                        "View queue",
                                         "Shutdown",
                                       ],
                                     ),
