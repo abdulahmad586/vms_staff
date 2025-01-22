@@ -96,7 +96,7 @@ extension BuildContextExtensions on BuildContext {
               message,
               style: TextStyle(color: Theme.of(this).canvasColor),
             ),
-            backgroundColor: Theme.of(this).textTheme.bodyText1?.color,
+            backgroundColor: Theme.of(this).textTheme.bodyMedium?.color,
             duration: duration,
           ),
         );
