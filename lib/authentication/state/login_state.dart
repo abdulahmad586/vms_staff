@@ -12,6 +12,8 @@ class LoginCubit extends Cubit<LoginState> {
 
       final loginResponse =
           await authService.login(email: email, password: password);
+      AppStorage().userEmail = email;
+      AppStorage().userPass = password;
       emit(state.copyWith(loading: false, error: ""));
       onLoggedIn(loginResponse);
     } catch (e) {

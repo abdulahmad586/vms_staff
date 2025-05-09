@@ -2,8 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:media_thumbnail/media_thumbnail.dart';
-import 'package:video_thumbnail/video_thumbnail.dart';
+import 'package:video_compress/video_compress.dart';
 
 class MediaUtils {
   static const String MEDIA_TYPE_UNKNOWN = 'unknown';
@@ -29,10 +28,8 @@ class MediaUtils {
 
   static Future<Uint8List?> generateThumbnailFromLocal(String filePath,
       {int maxWidth = 128, int quality = 25}) async {
-    final uint8list = await VideoThumbnail.thumbnailData(
-      video: filePath,
-      imageFormat: ImageFormat.JPEG,
-      maxWidth: maxWidth,
+    final uint8list = await VideoCompress.getByteThumbnail(
+      filePath,
       quality: quality,
     );
     return uint8list;
@@ -40,10 +37,8 @@ class MediaUtils {
 
   static Future<Uint8List?> generateThumbnailFromNetwork(String fileUrl,
       {int maxWidth = 128, int quality = 25}) async {
-    final uint8list = await VideoThumbnail.thumbnailData(
-      video: fileUrl,
-      imageFormat: ImageFormat.JPEG,
-      maxWidth: maxWidth,
+    final uint8list = await VideoCompress.getByteThumbnail(
+      fileUrl,
       quality: quality,
     );
     return uint8list;
@@ -54,7 +49,7 @@ class MediaUtils {
       final thumbnailPath =
           "${Directory.systemTemp.path}/${"${mediaPath.substring(mediaPath.lastIndexOf("/") + 1, mediaPath.lastIndexOf("."))}_thumb"}.jpg";
       if (!await File(thumbnailPath).exists()) {
-        await MediaThumbnail.videoThumbnail(mediaPath, thumbnailPath);
+        return (await VideoCompress.getFileThumbnail(mediaPath)).path;
         // print("SUCCESS GENERATING THUMB $thumbnailPath");
       }
       return mediaPath;

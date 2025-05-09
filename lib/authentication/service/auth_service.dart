@@ -33,7 +33,8 @@ class AuthService {
       //     accessGate: 'Gate One',
       //   ).toMap()
       // };
-      User user = User.fromMap(response['staff'] as Map<String, dynamic>);
+      User user = User.fromMap(response['staff'] as Map<String, dynamic>)
+          .copyWith(userType: UserType.deptAdmin);
       String? token = response['token'] as String?;
       if (token != null) {
         _dioClient.initToken(token);

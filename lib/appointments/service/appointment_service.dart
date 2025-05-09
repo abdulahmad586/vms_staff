@@ -11,12 +11,26 @@ class AppointmentService {
       "eventName": meeting.label,
       "guestPhone": meeting.guest?.phone,
       "calendar": meeting.calendar,
+      if (meeting.host != null)
+        "host": {
+          '_id': meeting.host?.id,
+          'designation': meeting.host?.designation,
+          'email': meeting.host?.email,
+          'firstName': meeting.host?.firstName,
+          'lastName': meeting.host?.lastName,
+          'phone': meeting.host?.phone,
+          'placeOfWork': meeting.host?.placeOfWork,
+        },
       "date": meeting.date.toString().split(" ")[0],
       "time": meeting.date.toString().split(" ")[1].substring(0, 5),
       "visitLocation": meeting.visitLocation,
       "accessGate": meeting.accessGate,
       "description": meeting.description,
     };
+
+    if (meeting.hostname != null) {
+      data.addAll({"hostname": meeting.hostname});
+    }
 
     final response =
         await _dioClient.post(ApiConstants.postCreateAppointment, data: data);
@@ -76,6 +90,18 @@ class AppointmentService {
     //     });
 
     return meeting;
+  }
+
+  Future<List<User>> searchUsersByPhone(String phone,
+      {int page = 1, int pageSize = 10}) async {
+    final apiEndpoint = ApiConstants.searchStaffByPhone(phone);
+    final result = await _dioClient.get(apiEndpoint);
+    ApiResponse response = ApiResponse.fromMap(result, dataField: 'staff');
+    if (response.data != null) {
+      final users = User.fromMapArray(response.data);
+      return users;
+    }
+    return [];
   }
 
   Future<List<AppointmentModel>> getMeetings(

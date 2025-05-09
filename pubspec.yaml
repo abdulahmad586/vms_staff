@@ -39,7 +39,7 @@ dependencies:
   video_player: ^2.4.7
   flutter_expandable_fab: ^1.5.1
   simple_circular_progress_bar: ^1.0.2
-  media_thumbnail: ^0.0.3
+#  media_thumbnail: ^0.0.3
   path_provider: ^2.0.11
   hive: ^2.2.3
   loading_indicator: ^3.1.0
@@ -56,13 +56,13 @@ dependencies:
   flutter_dotenv: ^5.0.2
   filesize: ^2.0.1
   permission_handler: ^11.3.1
-  record: ^4.4.4
+  record: ^6.0.0
   just_audio: ^0.9.31
   tbib_splash_screen: ^1.0.0
   animated_text_kit: ^4.2.2
   # background_location_tracker: ^1.4.0
   geolocator: ^9.0.2
-  flutter_typeahead: ^4.1.1
+  flutter_typeahead: ^5.2.0
   banner_carousel: ^1.2.1
   video_compress: ^3.1.0
   dio: ^4.0.6
@@ -75,30 +75,30 @@ dependencies:
   animated_bottom_navigation_bar: ^1.2.1
   date_time_format: ^2.0.1
   flutter_svg_provider: ^1.0.6
-  video_thumbnail: ^0.5.3
+#  video_thumbnail: ^0.5.3
   animated_pie_chart: ^0.0.2
   kf_drawer:
     git: https://github.com/abdulahmad586/kf_drawer.git
   pull_to_refresh_flutter3: ^2.0.1
   pretty_qr_code: ^2.0.3
-  persistent_device_calendar: ^0.0.1
+#  persistent_device_calendar: ^0.0.1
   calendar_timeline: ^1.1.2
   timeline_tile: ^2.0.0
   shimmer: ^2.0.0
   dotted_border: ^2.1.0
   flutter_image_compress: ^2.2.0
-  image_cropper: ^5.0.1
+  image_cropper: ^9.1.0
   image_picker: ^1.0.7
-  qr_bar_code_scanner_dialog: ^0.0.5
+  qr_code_scanner_plus: ^2.0.10+1
   sidebarx: ^0.17.1
   time_picker_spinner_pop_up: ^2.0.0
   textfield_datepicker: ^0.2.0
   table_calendar: ^3.1.2
-  flutter_webrtc: ^0.10.4
-  sip_ua: ^0.6.0
+  flutter_webrtc: ^0.12.4
+  sip_ua: ^1.0.1
   flutter_inappwebview: ^6.0.0
   data_table_2: 2.5.12
-  app_minimizer: ^1.0.0+3
+#  app_minimizer: ^1.0.0+3
 
 dependency_overrides:
   intl: ^0.18.0

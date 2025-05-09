@@ -14,7 +14,7 @@ class MyAudioRecorder {
 
   MyAudioRecorder(this.setState, this.ticker, this.maxRecordingDuration);
 
-  final _record = Record();
+  final _record = AudioRecorder();
   String path = '';
   late Future stopper;
 
@@ -30,11 +30,13 @@ class MyAudioRecorder {
       // Start recording
 
       await _record.start(
-          path: path,
-          encoder: encoder, // by default
-          bitRate: 16000, // by default
-          samplingRate: samplingRate, // by default
-          numChannels: numChannels);
+        RecordConfig(
+            encoder: encoder, // by default
+            bitRate: 32768, // by default
+            sampleRate: samplingRate, // by default
+            numChannels: numChannels),
+        path: path,
+      );
       ticker.start();
       setState(() {
         recording = true;

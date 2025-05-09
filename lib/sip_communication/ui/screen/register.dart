@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shevarms_user/shared/shared.dart';
 import 'package:sip_ua/sip_ua.dart';
 
@@ -25,7 +24,7 @@ class _MyRegisterWidget extends State<RegisterWidget>
     // 'Origin': ' https://tryit.jssip.net',
     // 'Host': 'tryit.jssip.net:10443'
   };
-  late SharedPreferences _preferences;
+  late AppStorage _preferences;
   late RegistrationState _registerState;
 
   TransportType _selectedTransport = TransportType.TCP;
@@ -62,27 +61,26 @@ class _MyRegisterWidget extends State<RegisterWidget>
   }
 
   void _loadSettings() async {
-    _preferences = await SharedPreferences.getInstance();
+    _preferences = await AppStorage();
     setState(() {
       _portController.text = '5060';
       _wsUriController.text =
-          _preferences.getString('ws_uri') ?? 'wss://tryit.jssip.net:10443';
-      _sipUriController.text = _preferences.getString('sip_uri') ?? '';
+          _preferences.sip_ws_uri ?? 'wss://tryit.jssip.net:10443';
+      _sipUriController.text = _preferences.sip_uri ?? '';
       _displayNameController.text =
-          _preferences.getString('display_name') ?? 'VMS SIP UA';
-      _passwordController.text = _preferences.getString('password') ?? '';
-      _authorizationUserController.text =
-          _preferences.getString('auth_user') ?? '';
+          _preferences.sip_display_name ?? 'VMS SIP UA';
+      _passwordController.text = _preferences.sip_password ?? '';
+      _authorizationUserController.text = _preferences.sip_auth_user ?? '';
     });
   }
 
   void _saveSettings() {
-    _preferences.setString('port', _portController.text);
-    _preferences.setString('ws_uri', _wsUriController.text);
-    _preferences.setString('sip_uri', _sipUriController.text);
-    _preferences.setString('display_name', _displayNameController.text);
-    _preferences.setString('password', _passwordController.text);
-    _preferences.setString('auth_user', _authorizationUserController.text);
+    _preferences.sip_port = _portController.text;
+    _preferences.sip_ws_uri = _wsUriController.text;
+    _preferences.sip_uri = _sipUriController.text;
+    _preferences.sip_display_name = _displayNameController.text;
+    _preferences.sip_password = _passwordController.text;
+    _preferences.sip_auth_user = _authorizationUserController.text;
   }
 
   @override
@@ -263,5 +261,10 @@ class _MyRegisterWidget extends State<RegisterWidget>
   @override
   void onNewNotify(Notify ntf) {
     // NO OP
+  }
+
+  @override
+  void onNewReinvite(ReInvite event) {
+    // TODO: implement onNewReinvite
   }
 }

@@ -13,6 +13,7 @@ enum UserType {
   staff,
   paGovernor,
   chiefDetail,
+  deptAdmin
 }
 
 UserType getUserType(String? str) {
@@ -32,6 +33,7 @@ class User {
     UserType.staff: "Staff",
     UserType.paGovernor: "PA Governor",
     UserType.chiefDetail: "Chief Detail",
+    UserType.deptAdmin: "Department Admin",
   };
 
   String? get fullName => "$firstName $lastName";
@@ -56,6 +58,8 @@ class User {
         return UserType.paGovernor;
       case "Chief Detail":
         return UserType.chiefDetail;
+      case "Department Admin":
+        return UserType.deptAdmin;
       default:
         return UserType.staff;
     }

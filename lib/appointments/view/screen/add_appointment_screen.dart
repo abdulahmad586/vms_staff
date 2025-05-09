@@ -1,7 +1,9 @@
 import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shevarms_user/appointments/appointments.dart';
+import 'package:shevarms_user/appointments/view/screen/staff_search_screen.dart';
 import 'package:shevarms_user/shared/shared.dart';
 import 'package:shevarms_user/visitor_enrolment/visitor_enrolment.dart';
 import 'package:time_picker_spinner_pop_up/time_picker_spinner_pop_up.dart';
@@ -21,9 +23,12 @@ class _AddAppointmentState extends State<AddAppointment> {
 
   late TextEditingController topicController,
       descriptionController,
-      calendarController;
+      calendarController,
+      hostnameController;
 
   final _formKey = GlobalKey<FormState>();
+  final _hostnameKey = GlobalKey();
+  final _hostKey = GlobalKey();
 
   String? stat;
   bool? loading;
@@ -35,10 +40,14 @@ class _AddAppointmentState extends State<AddAppointment> {
             includeTime: true)));
     topicController = TextEditingController.fromValue(
         TextEditingValue(text: widget.meeting.label));
+    topicController = TextEditingController.fromValue(
+        TextEditingValue(text: widget.meeting.label));
     descriptionController = TextEditingController.fromValue(
         TextEditingValue(text: widget.meeting.description));
     calendarController = TextEditingController.fromValue(
         TextEditingValue(text: widget.meeting.calendar));
+    hostnameController = TextEditingController.fromValue(
+        TextEditingValue(text: widget.meeting.hostname ?? ''));
     super.initState();
   }
 
@@ -70,7 +79,7 @@ class _AddAppointmentState extends State<AddAppointment> {
                       color: AppColors.primaryColor),
                 ),
                 const SizedBox(
-                  height: 20,
+                  height: 5,
                 ),
                 Text(
                   "Fill the form below to register a meeting",
@@ -80,7 +89,7 @@ class _AddAppointmentState extends State<AddAppointment> {
                       ?.copyWith(color: Colors.grey),
                 ),
                 const SizedBox(
-                  height: 40,
+                  height: 10,
                 ),
                 Text(
                   "Meeting Information",
@@ -128,7 +137,8 @@ class _AddAppointmentState extends State<AddAppointment> {
                       });
                     } else {
                       setState(() {
-                        widget.meeting.label = (str as DropDownValueModel).name;
+                        widget.meeting.calendar =
+                            (str as DropDownValueModel).name;
                       });
                     }
                     // });
@@ -158,7 +168,6 @@ class _AddAppointmentState extends State<AddAppointment> {
                 const SizedBox(
                   height: 15,
                 ),
-                const SizedBox(height: 25),
                 Text(
                   "Meeting Date & Time",
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -219,6 +228,60 @@ class _AddAppointmentState extends State<AddAppointment> {
                   ),
                 ]),
                 const SizedBox(height: 25),
+                if (context.read<AppCubit>().user?.userType ==
+                    UserType.deptAdmin)
+                  Text(
+                    "Meeting Host",
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primaryColor),
+                  ),
+                if (context.read<AppCubit>().user?.userType ==
+                    UserType.deptAdmin)
+                  const SizedBox(
+                    height: 15,
+                  ),
+                if (context.read<AppCubit>().user?.userType ==
+                    UserType.deptAdmin)
+                  (widget.meeting.host == null
+                      ? AppTextField(
+                          labelText: 'Host',
+                          widthPercentage: 100,
+                          key: _hostKey,
+                          focusNode: AlwaysDisabledFocusNode(),
+                          validator: (s) => s == null || s.isEmpty
+                              ? "This field is required"
+                              : null,
+                          onTap: () {
+                            NavUtils.navTo(context, const StaffSearchScreen(),
+                                onReturn: (staff) {
+                              if (staff is User) {
+                                setState(() {
+                                  widget.meeting.host = staff;
+                                });
+                              }
+                            });
+                          },
+                          keyboardType: TextInputType.name,
+                          icon: Icons.person,
+                        )
+                      : AppTextField(
+                          key: _hostnameKey,
+                          labelText: 'Host',
+                          widthPercentage: 100,
+                          controller: TextEditingController(
+                              text: widget.meeting.host?.fullName),
+                          focusNode: AlwaysDisabledFocusNode(),
+                          suffixIcon:
+                              CustomIconButton(Icons.clear, onPressed: () {
+                            setState(() {
+                              widget.meeting.host = null;
+                            });
+                          }),
+                          keyboardType: TextInputType.name,
+                          icon: Icons.person,
+                        )),
+                const SizedBox(height: 15),
                 Text(
                   "Visitor Profile",
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -243,6 +306,9 @@ class _AddAppointmentState extends State<AddAppointment> {
                           labelText: 'Search visitor by phone',
                           widthPercentage: 90,
                           keyboardType: TextInputType.phone,
+                          validator: (s) => s == null || s.isEmpty
+                              ? "This field is required"
+                              : null,
                           focusNode: AlwaysDisabledFocusNode(),
                           onTap: () {
                             NavUtils.navTo(context, const VisitorSearchScreen(),
@@ -294,7 +360,7 @@ class _AddAppointmentState extends State<AddAppointment> {
                         style: Theme.of(context).textTheme.labelMedium),
                   ),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 10),
                 AppTextButton(
                   buttonColor: AppColors.primaryColor,
                   textColor: Colors.white,

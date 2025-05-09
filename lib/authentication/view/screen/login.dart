@@ -18,8 +18,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  TextEditingController email =
-      TextEditingController.fromValue(const TextEditingValue(text: ""));
+  late TextEditingController email = TextEditingController.fromValue(
+      TextEditingValue(text: AppStorage().userEmail ?? ""));
   TextEditingController password =
       TextEditingController.fromValue(const TextEditingValue(text: ""));
 

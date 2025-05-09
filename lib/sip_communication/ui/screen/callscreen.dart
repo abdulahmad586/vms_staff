@@ -624,4 +624,9 @@ class _MyCallScreenWidget extends State<CallScreenWidget>
   void onNewNotify(Notify ntf) {
     // NO OP
   }
+
+  @override
+  void onNewReinvite(ReInvite event) {
+    // TODO: implement onNewReinvite
+  }
 }

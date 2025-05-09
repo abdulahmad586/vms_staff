@@ -25,7 +25,7 @@ class AppointmentDetailsScreen extends StatelessWidget {
             children: [
               Text(
                 appointment.label,
-                style: Theme.of(context).textTheme.headline6,
+                style: Theme.of(context).textTheme.labelMedium,
               ),
               const SizedBox(height: 10),
               Text(
@@ -44,7 +44,7 @@ class AppointmentDetailsScreen extends StatelessWidget {
                   'Guest Information',
                   style: Theme.of(context)
                       .textTheme
-                      .subtitle1
+                      .labelSmall
                       ?.copyWith(color: Colors.grey),
                 ),
                 Card(
@@ -111,7 +111,7 @@ class AppointmentDetailsScreen extends StatelessWidget {
                 'Appointment Details',
                 style: Theme.of(context)
                     .textTheme
-                    .subtitle1
+                    .labelSmall
                     ?.copyWith(color: Colors.grey),
               ),
               const SizedBox(height: 8),

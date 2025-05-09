@@ -40,11 +40,12 @@ class _HomePageState extends State<HomePage> {
           UserType.superUser,
           UserType.paGovernor,
           UserType.chiefDetail,
+          UserType.deptAdmin,
         ]),
     NavItem(
         icon: Icons.calendar_month,
-        name: 'My Appointments',
-        title: 'My Appointments',
+        name: 'Appointments',
+        title: 'Appointments',
         body: AppointmentsScreen(),
         allowedUsers: [
           UserType.he,
@@ -54,11 +55,12 @@ class _HomePageState extends State<HomePage> {
           UserType.superUser,
           UserType.paGovernor,
           UserType.chiefDetail,
+          UserType.deptAdmin,
         ]),
     NavItem(
         icon: Icons.alarm,
-        name: 'My Reminders',
-        title: 'My Reminders',
+        name: 'Reminders',
+        title: 'Reminders',
         body: RemindersScreen(),
         allowedUsers: [
           UserType.he,
@@ -118,6 +120,7 @@ class _HomePageState extends State<HomePage> {
           UserType.superUser,
           UserType.paGovernor,
           UserType.chiefDetail,
+          UserType.deptAdmin,
         ]),
     NavItem(
         icon: Icons.video_camera_back,

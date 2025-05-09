@@ -1,14 +1,17 @@
-import 'package:flutter/widgets.dart';
-import 'package:qr_bar_code_scanner_dialog/qr_bar_code_scanner_dialog_platform_interface.dart';
+import 'package:flutter/material.dart';
+
+import 'qr_scannerview.dart';
 
 class QrBarCodeScannerDialog {
-  Future<String?> getPlatformVersion() {
-    return QrBarCodeScannerDialogPlatform.instance.getPlatformVersion();
-  }
+  Future<void> getScannedQrBarCode({
+    required BuildContext context,
+    required Function(String?) onCode,
+  }) async {
+    final result = await Navigator.push<String>(
+      context,
+      MaterialPageRoute(builder: (context) => const QrScannerView()),
+    );
 
-  void getScannedQrBarCode(
-      {BuildContext? context, required Function(String?) onCode}) {
-    QrBarCodeScannerDialogPlatform.instance
-        .scanBarOrQrCode(context: context, onScanSuccess: onCode,);
+    onCode(result);
   }
 }

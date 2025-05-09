@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_webrtc/flutter_webrtc.dart';
 import 'package:kf_drawer/kf_drawer.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shevarms_user/shared/shared.dart';
 import 'package:shevarms_user/sip_communication/sip_communication.dart';
 import 'package:sip_ua/sip_ua.dart';
@@ -19,7 +19,7 @@ class _MyDialPadWidget extends State<DialPadWidget>
   String? _dest;
   SIPUAHelper? helper;
   TextEditingController? _textController;
-  late SharedPreferences _preferences;
+  late AppStorage _preferences;
 
   String? receivedMsg;
 
@@ -33,8 +33,8 @@ class _MyDialPadWidget extends State<DialPadWidget>
   }
 
   void _loadSettings() async {
-    _preferences = await SharedPreferences.getInstance();
-    _dest = _preferences.getString('dest') ?? '';
+    _preferences = await AppStorage();
+    _dest = _preferences.sipDest ?? '';
     _textController = TextEditingController(text: _dest);
     _textController!.text = _dest!;
 
@@ -103,8 +103,8 @@ class _MyDialPadWidget extends State<DialPadWidget>
       mediaStream = await navigator.mediaDevices.getUserMedia(mediaConstraints);
     }
 
-    helper!.call(dest, voiceonly: voiceOnly, mediaStream: mediaStream);
-    _preferences.setString('dest', dest);
+    helper!.call(dest, voiceOnly: voiceOnly, mediaStream: mediaStream);
+    _preferences.sipDest = dest;
     return null;
   }
 
@@ -312,4 +312,9 @@ class _MyDialPadWidget extends State<DialPadWidget>
 
   @override
   void onNewNotify(Notify ntf) {}
+
+  @override
+  void onNewReinvite(ReInvite event) {
+    // TODO: implement onNewReinvite
+  }
 }

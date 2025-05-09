@@ -73,6 +73,10 @@ class AppointmentsCubit extends Cubit<AppointmentState> {
         dataFinish: false));
     getData();
   }
+
+  void updateView(int i) {
+    emit(state.copyWith(view: i));
+  }
 }
 
 class AppointmentState {
@@ -81,6 +85,7 @@ class AppointmentState {
   List<AppointmentModel>? list;
   bool? loading = true;
   bool? dataFinish = false;
+  int? view;
   int? page;
   int? pageSize;
   DateTime? fromTime;
@@ -92,6 +97,7 @@ class AppointmentState {
     this.loading,
     this.dataFinish,
     this.list,
+    this.view,
     this.page,
     this.pageSize,
     this.fromTime,
@@ -104,6 +110,7 @@ class AppointmentState {
       {List<AppointmentModel>? list,
       bool? loading,
       bool? dataFinish,
+      int? view,
       int? page,
       int? pageSize,
       DateTime? fromTime,
@@ -115,6 +122,7 @@ class AppointmentState {
       list: list ?? this.list,
       loading: loading ?? this.loading,
       dataFinish: dataFinish ?? this.dataFinish,
+      view: view ?? this.view,
       page: page ?? this.page,
       pageSize: pageSize ?? this.pageSize,
       fromTime: fromTime ?? this.fromTime,

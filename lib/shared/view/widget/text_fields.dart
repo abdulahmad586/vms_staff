@@ -2,8 +2,9 @@ import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
-import 'package:shevarms_user/shared/constant/constant.dart';
 import 'package:textfield_datepicker/textfield_datepicker.dart';
+
+import '../../constant/constant.dart';
 
 class AppTextField extends StatelessWidget {
   final TextInputType? keyboardType;
@@ -180,30 +181,13 @@ class AppTextDropdown extends StatelessWidget {
           isEnabled: isEnabled ?? true,
           enableSearch: enableSearch ?? true,
           initialValue: initialValue,
-          textFieldDecoration: InputDecoration(
-            isDense: true,
-            suffixIcon:
-                suffixIcon ?? (icon == null ? null : Icon(icon, size: 15)),
+          textFieldDecoration: getDecoration(
+            context,
+            fillColor: fillColor,
             hintText: hintText,
+            icon: icon,
+            suffixIcon: suffixIcon,
             labelText: labelText,
-            fillColor: fillColor ?? Theme.of(context).highlightColor,
-            filled: true,
-            border: OutlineInputBorder(
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-              borderSide: BorderSide(color: Colors.grey[100]!, width: 1.0),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-              borderSide: BorderSide(color: Colors.grey[100]!, width: 1.0),
-            ),
-            errorBorder: OutlineInputBorder(
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
-              borderSide: BorderSide(color: Colors.red[100]!, width: 1.0),
-            ),
-            focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(color: AppColors.primaryColor, width: 1.0),
-              borderRadius: BorderRadius.all(Radius.circular(10)),
-            ),
           ),
           dropDownList: List.generate(
               list.length,
@@ -213,8 +197,42 @@ class AppTextDropdown extends StatelessWidget {
   }
 }
 
+InputDecoration getDecoration(BuildContext context,
+    {Widget? suffixIcon,
+    IconData? icon,
+    String? hintText,
+    Color? labelColor,
+    Color? fillColor,
+    String? labelText}) {
+  return InputDecoration(
+    isDense: true,
+    suffixIcon: suffixIcon ?? (icon == null ? null : Icon(icon, size: 15)),
+    hintText: hintText,
+    labelText: labelText,
+    // hintStyle: Theme.of(context).textTheme.bodyMedium,
+    fillColor: fillColor ?? Theme.of(context).highlightColor,
+    filled: true,
+    border: OutlineInputBorder(
+      borderRadius: const BorderRadius.all(Radius.circular(10)),
+      borderSide: BorderSide(color: Colors.grey[100]!, width: 1.0),
+    ),
+    enabledBorder: OutlineInputBorder(
+      borderRadius: const BorderRadius.all(Radius.circular(10)),
+      borderSide: BorderSide(color: Colors.grey[100]!, width: 1.0),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderRadius: const BorderRadius.all(Radius.circular(10)),
+      borderSide: BorderSide(color: Colors.red[100]!, width: 1.0),
+    ),
+    focusedBorder: const OutlineInputBorder(
+      borderSide: BorderSide(color: AppColors.primaryColor, width: 1.0),
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+    ),
+  );
+}
+
 class AppSearchField extends StatelessWidget {
-  const AppSearchField(
+  AppSearchField(
       {required this.loader,
       required this.itemBuilder,
       this.keyboardType,
@@ -237,7 +255,7 @@ class AppSearchField extends StatelessWidget {
       this.fillColor,
       this.onChange,
       this.onTap});
-  final Future<List<dynamic>> Function(String) loader;
+  Future<List<dynamic>> Function(String) loader;
   final TextInputType? keyboardType;
   final String? Function(String?)? validator;
   final double? widthPercentage;
@@ -263,7 +281,22 @@ class AppSearchField extends StatelessWidget {
       width: width ??
           ((widthPercentage ?? 100) / 100) * MediaQuery.of(context).size.width,
       child: TypeAheadField(
-        textFieldConfiguration: TextFieldConfiguration(
+        builder: (BuildContext context, TextEditingController controller,
+            FocusNode focusNode) {
+          return TextFormField(
+            controller: controller,
+            focusNode: focusNode,
+            decoration: getDecoration(
+              context,
+              fillColor: fillColor,
+              hintText: hintText,
+              icon: icon,
+              suffixIcon: suffixIcon,
+              labelText: labelText,
+            ),
+          );
+        },
+        /*textFieldConfiguration: TextFieldConfiguration(
           // autofocus: true,
           style: DefaultTextStyle.of(context)
               .style
@@ -275,38 +308,37 @@ class AppSearchField extends StatelessWidget {
                 (icon == null
                     ? null
                     : Icon(
-                        icon,
-                        size: 15,
-                        color: itemsColor,
-                      )),
+                  icon,
+                  size: 15,
+                  color: itemsColor,
+                )),
             hintText: hintText,
             labelText: labelText,
-            fillColor:
-                fillColor ?? Theme.of(context).highlightColor.withAlpha(30),
+            fillColor: fillColor?? Theme.of(context).highlightColor.withAlpha(30),
             filled: true,
             border: OutlineInputBorder(
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
+              borderRadius: BorderRadius.all(Radius.circular(10)),
               borderSide: BorderSide(color: Colors.grey[100]!, width: 1.0),
             ),
             enabledBorder: OutlineInputBorder(
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
+              borderRadius: BorderRadius.all(Radius.circular(10)),
               borderSide: BorderSide(color: Colors.grey[100]!, width: 1.0),
             ),
             errorBorder: OutlineInputBorder(
-              borderRadius: const BorderRadius.all(Radius.circular(10)),
+              borderRadius: BorderRadius.all(Radius.circular(10)),
               borderSide: BorderSide(color: Colors.red[100]!, width: 1.0),
             ),
-            focusedBorder: const OutlineInputBorder(
+            focusedBorder: OutlineInputBorder(
               borderSide: BorderSide(color: AppColors.primaryColor, width: 1.0),
-              borderRadius: BorderRadius.all(Radius.circular(10)),
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
             ),
           ),
-        ),
+        ),*/
         suggestionsCallback: (pattern) async {
           return await loader(pattern);
         },
         itemBuilder: itemBuilder,
-        onSuggestionSelected: onSuggestionSelected ?? (s) {},
+        onSelected: onSuggestionSelected ?? (s) {},
       ),
     );
   }
