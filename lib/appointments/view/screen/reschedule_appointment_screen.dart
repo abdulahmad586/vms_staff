@@ -1,8 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:shevarms_user/appointments/appointments.dart';
 import 'package:shevarms_user/shared/shared.dart';
-import 'package:time_picker_spinner_pop_up/time_picker_spinner_pop_up.dart';
 
 class RescheduleAppointmentScreen extends StatefulWidget {
   AppointmentModel appointment;
@@ -83,55 +81,17 @@ class _RescheduleAppointmentScreenState
                 const SizedBox(height: 15),
                 const Text("New Date & Time"),
                 const SizedBox(height: 10),
-                Row(children: [
-                  TimePickerSpinnerPopUp(
-                    mode: CupertinoDatePickerMode.date,
-                    initTime: widget.appointment.date,
-                    minTime: DateTime.now().subtract(Duration(days: 10)),
-                    // maxTime: DateTime.now().add(const Duration(days: 99999999)),
-                    barrierColor:
-                        Colors.black12, //Barrier Color when pop up show
-                    onChange: (dateTime) {
-                      var setDate = widget.appointment.date;
-                      var date = DateTime(
-                          dateTime.year,
-                          dateTime.month,
-                          dateTime.day,
-                          setDate.hour,
-                          setDate.minute,
-                          setDate.second,
-                          0);
-                      setState(() {
-                        widget.appointment.date = date;
-                      });
-                    },
-                  ),
-                  const SizedBox(width: 10),
-                  TimePickerSpinnerPopUp(
-                    mode: CupertinoDatePickerMode.time,
-                    initTime: widget.appointment.date,
-                    minTime: DateTime.now().subtract(Duration(days: 10)),
-                    // maxTime: DateTime.now().add(const Duration(days: 10)),
-                    barrierColor:
-                        Colors.black12, //Barrier Color when pop up show
-                    onChange: (dateTime) {
-                      var setDate = widget.appointment.date;
-                      var date = DateTime(
-                          setDate.year,
-                          setDate.month,
-                          setDate.day,
-                          dateTime.hour,
-                          dateTime.minute,
-                          dateTime.second,
-                          0);
-                      setState(() {
-                        widget.appointment.date = date;
-                      });
-                    },
-                    // Customize your time format
-                    // timeFormat: 'dd/MM/yyyy',
-                  ),
-                ]),
+                AppDateTimeField(
+                  labelText: 'Date & Time',
+                  hintText: 'Pick date & time',
+                  initialValue: widget.appointment.date,
+                  minimumDate: DateTime.now().add(const Duration(minutes: 10)),
+                  onChange: (dateTime) {
+                    setState(() {
+                      widget.appointment.date = dateTime;
+                    });
+                  },
+                ),
                 SizedBox(
                   height: 30,
                   child: Align(

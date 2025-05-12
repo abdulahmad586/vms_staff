@@ -93,8 +93,9 @@ class AppointmentService {
   }
 
   Future<List<User>> searchUsersByPhone(String phone,
-      {int page = 1, int pageSize = 10}) async {
-    final apiEndpoint = ApiConstants.searchStaffByPhone(phone);
+      {int page = 1, int pageSize = 10, String? deptAdminLocation}) async {
+    final apiEndpoint =
+        ApiConstants.searchStaffByPhone(phone, filter: deptAdminLocation);
     final result = await _dioClient.get(apiEndpoint);
     ApiResponse response = ApiResponse.fromMap(result, dataField: 'staff');
     if (response.data != null) {

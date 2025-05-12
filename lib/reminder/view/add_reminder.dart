@@ -1,10 +1,8 @@
 import 'package:dropdown_textfield/dropdown_textfield.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shevarms_user/reminder/reminder.dart';
 import 'package:shevarms_user/shared/shared.dart';
-import 'package:time_picker_spinner_pop_up/time_picker_spinner_pop_up.dart';
 
 class AddReminder extends StatelessWidget {
   AddReminder({super.key});
@@ -152,39 +150,14 @@ class AddReminder extends StatelessWidget {
           list: calendars,
         ),
         const SizedBox(height: 15),
-        AppTextDateField(
-          hintText: 'Date',
-          minimumDate: DateTime.now(),
-          minimumYear: DateTime.now().year,
+        AppDateTimeField(
+          labelText: 'Date & Time',
+          hintText: 'Pick date & time',
+          minimumDate: DateTime.now().add(const Duration(minutes: 10)),
           initialValue: state.time,
-          validator: (s) {
-            if (s == null || s.isEmpty) return "This field is required";
-            return null;
+          onChange: (dateTime) {
+            context.read<AddReminderCubit>().updateTime(dateTime);
           },
-          onChange: (val) {
-            context.read<AddReminderCubit>().updateTime(val);
-          },
-          suffixIcon: Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: TimePickerSpinnerPopUp(
-              mode: CupertinoDatePickerMode.time,
-              initTime: state.time ?? DateTime.now(),
-              minTime: DateTime.now().add(const Duration(minutes: 2)),
-              // maxTime: DateTime.now().add(const Duration(days: 10)),
-              barrierColor: Colors.black12, //Barrier Color when pop up show
-              onChange: (dateTime) {
-                var dateTime1 = DateTime(
-                    state.time?.year ?? DateTime.now().year,
-                    state.time?.month ?? DateTime.now().month,
-                    state.time?.day ?? DateTime.now().day,
-                    dateTime.hour,
-                    dateTime.minute,
-                    dateTime.second,
-                    0);
-                context.read<AddReminderCubit>().updateTime(dateTime1);
-              },
-            ),
-          ),
         ),
         const SizedBox(height: 15),
         AppTextField(

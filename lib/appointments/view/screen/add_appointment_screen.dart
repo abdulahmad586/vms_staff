@@ -1,12 +1,10 @@
 import 'package:dropdown_textfield/dropdown_textfield.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shevarms_user/appointments/appointments.dart';
 import 'package:shevarms_user/appointments/view/screen/staff_search_screen.dart';
 import 'package:shevarms_user/shared/shared.dart';
 import 'package:shevarms_user/visitor_enrolment/visitor_enrolment.dart';
-import 'package:time_picker_spinner_pop_up/time_picker_spinner_pop_up.dart';
 
 class AddAppointment extends StatefulWidget {
   AppointmentModel meeting;
@@ -177,56 +175,17 @@ class _AddAppointmentState extends State<AddAppointment> {
                 const SizedBox(
                   height: 15,
                 ),
-                Row(children: [
-                  TimePickerSpinnerPopUp(
-                    mode: CupertinoDatePickerMode.date,
-                    // paddingHorizontal: 50,
-                    initTime: widget.meeting.date,
-                    minTime: DateTime.now().subtract(Duration(days: 10)),
-                    // maxTime: DateTime.now().add(const Duration(days: 99999999)),
-                    barrierColor:
-                        Colors.black12, //Barrier Color when pop up show
-                    onChange: (dateTime) {
-                      var setDate = widget.meeting.date;
-                      var date = DateTime(
-                          dateTime.year,
-                          dateTime.month,
-                          dateTime.day,
-                          setDate.hour,
-                          setDate.minute,
-                          setDate.second,
-                          0);
-                      setState(() {
-                        widget.meeting.date = date;
-                      });
-                    },
-                  ),
-                  const SizedBox(width: 10),
-                  TimePickerSpinnerPopUp(
-                    mode: CupertinoDatePickerMode.time,
-                    initTime: widget.meeting.date,
-                    minTime: DateTime.now().subtract(Duration(days: 10)),
-                    // maxTime: DateTime.now().add(const Duration(days: 10)),
-                    barrierColor:
-                        Colors.black12, //Barrier Color when pop up show
-                    onChange: (dateTime) {
-                      var setDate = widget.meeting.date;
-                      var date = DateTime(
-                          setDate.year,
-                          setDate.month,
-                          setDate.day,
-                          dateTime.hour,
-                          dateTime.minute,
-                          dateTime.second,
-                          0);
-                      setState(() {
-                        widget.meeting.date = date;
-                      });
-                    },
-                    // Customize your time format
-                    // timeFormat: 'dd/MM/yyyy',
-                  ),
-                ]),
+                AppDateTimeField(
+                  labelText: 'Date & Time',
+                  hintText: 'Pick date & time',
+                  initialValue: widget.meeting.date,
+                  minimumDate: DateTime.now().add(const Duration(minutes: 10)),
+                  onChange: (dateTime) {
+                    setState(() {
+                      widget.meeting.date = dateTime;
+                    });
+                  },
+                ),
                 const SizedBox(height: 25),
                 if (context.read<AppCubit>().user?.userType ==
                     UserType.deptAdmin)

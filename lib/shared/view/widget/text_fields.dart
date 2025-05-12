@@ -2,6 +2,7 @@ import 'package:dropdown_textfield/dropdown_textfield.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
+import 'package:omni_datetime_picker/omni_datetime_picker.dart';
 import 'package:textfield_datepicker/textfield_datepicker.dart';
 
 import '../../constant/constant.dart';
@@ -437,6 +438,124 @@ class AppTextDateField extends StatelessWidget {
             hintText: hintText,
             labelText: labelText,
             fillColor: Theme.of(context).highlightColor,
+            filled: true,
+            border: OutlineInputBorder(
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+              borderSide: BorderSide(color: Colors.grey[100]!, width: 1.0),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+              borderSide: BorderSide(color: Colors.grey[100]!, width: 1.0),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+              borderSide: BorderSide(color: Colors.red[100]!, width: 1.0),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide:
+                  BorderSide(color: Theme.of(context).primaryColor, width: 1.0),
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class AppDateTimeField extends StatelessWidget {
+  final String? Function(String?)? validator;
+  final double? widthPercentage;
+  final double? width;
+  final String? hintText;
+  final String? labelText;
+  final IconData? icon;
+  final Widget? suffixIcon;
+  final bool? enabled, autoFocus;
+  final Color? itemsColor, fillColor;
+  final int? minLines, maxLines;
+  final TextEditingController? controller;
+  final Function()? onTapOutside;
+  final Function()? onEditingComplete;
+  final Function(DateTime)? onChange;
+  final DateTime? initialValue;
+  final DateTime? minimumDate;
+  final DateTime? maximumDate;
+
+  const AppDateTimeField({
+    super.key,
+    this.validator,
+    this.widthPercentage,
+    this.width,
+    this.hintText,
+    this.labelText,
+    this.icon,
+    this.suffixIcon,
+    this.fillColor,
+    this.enabled = true,
+    this.autoFocus = false,
+    this.itemsColor,
+    this.minLines,
+    this.maxLines,
+    this.controller,
+    this.onEditingComplete,
+    this.onChange,
+    this.onTapOutside,
+    this.initialValue,
+    this.minimumDate,
+    this.maximumDate,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final TextEditingController ctrl = controller ??
+        TextEditingController(
+          text: initialValue != null
+              ? DateFormat('yyyy-MM-dd HH:mm a').format(initialValue!)
+              : '',
+        );
+
+    return Container(
+      constraints: const BoxConstraints(maxWidth: 350),
+      child: SizedBox(
+        width: width ??
+            ((widthPercentage ?? 100) / 100) *
+                MediaQuery.of(context).size.width,
+        child: TextFormField(
+          controller: ctrl,
+          autofocus: autoFocus ?? false,
+          enabled: enabled,
+          validator: validator,
+          onTapOutside: (_) => onTapOutside?.call(),
+          readOnly: true,
+          onTap: () async {
+            DateTime? dateTime = await showOmniDateTimePicker(
+              context: context,
+              initialDate: initialValue ?? DateTime.now(),
+              firstDate: minimumDate ?? DateTime(1930),
+              lastDate: maximumDate ?? DateTime(2099),
+              is24HourMode: false,
+              isForce2Digits: true,
+              minutesInterval: 1,
+              borderRadius: const BorderRadius.all(Radius.circular(15)),
+              transitionBuilder: (context, anim1, anim2, child) {
+                return FadeTransition(opacity: anim1, child: child);
+              },
+            );
+
+            if (dateTime != null) {
+              ctrl.text = DateFormat('yyyy-MM-dd HH:mm a').format(dateTime);
+              onChange?.call(dateTime);
+            }
+          },
+          onEditingComplete: () => onEditingComplete?.call(),
+          decoration: InputDecoration(
+            isDense: true,
+            suffixIcon:
+                suffixIcon ?? (icon == null ? null : Icon(icon, size: 15)),
+            hintText: hintText ?? 'Select date and time',
+            labelText: labelText,
+            fillColor: fillColor ?? Theme.of(context).highlightColor,
             filled: true,
             border: OutlineInputBorder(
               borderRadius: const BorderRadius.all(Radius.circular(10)),

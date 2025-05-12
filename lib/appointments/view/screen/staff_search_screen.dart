@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shevarms_user/appointments/service/appointment_service.dart';
 import 'package:shevarms_user/shared/shared.dart';
 
@@ -15,7 +16,6 @@ class StaffSearchScreen extends StatefulWidget {
 
 class _StaffSearchScreenState extends State<StaffSearchScreen> {
   List<User> users = [];
-  final _qrBarCodeScannerDialogPlugin = QrBarCodeScannerDialog();
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +44,12 @@ class _StaffSearchScreenState extends State<StaffSearchScreen> {
                       keyboardType: TextInputType.phone,
                       autoFocus: true,
                       onChange: (s) {
-                        if (s.length > 3) {
-                          debouncer(const Duration(milliseconds: 250),
-                              () => searchUsers(s));
+                        if (s.length > 4) {
+                          debouncer(
+                              const Duration(milliseconds: 250),
+                              () => searchUsers(s,
+                                  deptAdminLocation:
+                                      context.read<AppCubit>().user?.location));
                         } else {
                           setState(() {
                             users = [];
@@ -92,9 +95,10 @@ class _StaffSearchScreenState extends State<StaffSearchScreen> {
     });
   }
 
-  searchUsers(String s) async {
+  searchUsers(String s, {String? deptAdminLocation}) async {
     try {
-      final results = await AppointmentService().searchUsersByPhone(s);
+      final results = await AppointmentService()
+          .searchUsersByPhone(s, deptAdminLocation: deptAdminLocation);
       setState(() {
         users = results;
       });

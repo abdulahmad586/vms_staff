@@ -42,8 +42,8 @@ class ApiConstants {
   static String searchVisitorsByPhone(phone) =>
       "/api/v1/guest/autocomplete?phone=$phone";
 
-  static String searchStaffByPhone(phone) =>
-      "/api/v1/auth/staff/autocomplete?phone=$phone";
+  static String searchStaffByPhone(phone, {String? filter}) =>
+      "/api/v1/auth/staff/autocomplete?phone=$phone&filter=$filter";
 
   static String getAllCards = "/api/v1/card/";
   static String uploadCards = "/api/v1/card/";

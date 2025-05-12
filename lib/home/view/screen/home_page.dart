@@ -26,6 +26,18 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   UserType userType = UserType.staff;
 
+  static List<UserType> staffLike = [
+    UserType.seniorStaff,
+    UserType.staff,
+    UserType.paGovernor,
+    UserType.pps,
+    UserType.firstLady,
+    UserType.paFirstLady,
+    UserType.COS,
+    UserType.DCOS,
+    UserType.he,
+  ];
+
   List<NavItem> navItems = [
     NavItem(
         icon: Icons.dashboard,
@@ -33,6 +45,7 @@ class _HomePageState extends State<HomePage> {
         title: 'Dashboard',
         body: Dashboard(),
         allowedUsers: [
+          ...staffLike,
           UserType.seniorStaff,
           UserType.he,
           UserType.staff,
@@ -48,6 +61,7 @@ class _HomePageState extends State<HomePage> {
         title: 'Appointments',
         body: AppointmentsScreen(),
         allowedUsers: [
+          ...staffLike,
           UserType.he,
           UserType.seniorStaff,
           UserType.staff,
@@ -63,6 +77,7 @@ class _HomePageState extends State<HomePage> {
         title: 'Reminders',
         body: RemindersScreen(),
         allowedUsers: [
+          ...staffLike,
           UserType.he,
           UserType.seniorStaff,
           UserType.staff,
@@ -101,6 +116,7 @@ class _HomePageState extends State<HomePage> {
         title: 'Dashboard Control',
         body: DashboardTVsListScreen() /*DashboardControlScreen()*/,
         allowedUsers: [
+          ...staffLike,
           UserType.seniorStaff,
           UserType.he,
           UserType.admin,
@@ -113,6 +129,7 @@ class _HomePageState extends State<HomePage> {
         title: 'Notifications',
         body: NotificationsPage(),
         allowedUsers: [
+          ...staffLike,
           UserType.he,
           UserType.seniorStaff,
           UserType.staff,
@@ -127,13 +144,19 @@ class _HomePageState extends State<HomePage> {
         name: 'Meetings',
         title: 'Meetings',
         body: VideoConferenceScreen(),
-        allowedUsers: [UserType.staff, UserType.seniorStaff, UserType.he]),
+        allowedUsers: [
+          ...staffLike,
+          UserType.staff,
+          UserType.seniorStaff,
+          UserType.he
+        ]),
     NavItem(
         icon: Icons.call,
         name: 'Phone Sys',
         title: 'Phone Sys',
         body: DialPadWidget(),
         allowedUsers: [
+          ...staffLike,
           UserType.staff,
           UserType.seniorStaff,
           UserType.he,
